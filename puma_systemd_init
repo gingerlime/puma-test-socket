@@ -1,0 +1,26 @@
+#!/bin/bash
+
+sudo apt update && sudo apt upgrade -y
+
+sudo chsh -s /bin/bash www-data
+# make www-data owner of its home folder (usually /var/www)
+sudo mkdir -p `eval echo ~www-data`
+
+sudo chown -R www-data: `eval echo ~www-data`
+
+sudo apt-get remove -y ruby
+sudo apt-get install -y autoconf bison build-essential libssl-dev libyaml-dev libreadline-dev zlib1g-dev libncurses5-dev libffi-dev libgdbm-dev socat
+
+sudo git clone https://github.com/rbenv/ruby-build.git
+cd ./ruby-build && git checkout master && git pull origin master
+sudo PREFIX=/usr/local ./install.sh
+ruby-build -v 2.6.3 /usr
+sudo gem update --system
+
+cp puma.service puma.socket /etc/systemd/system/
+sudo systemctl daemon-reload
+sudo systemctl enable puma.socket puma.service
+sudo mkdir -p /app ; git clone https://github.com/michelesr/puma-sinatra-example.git /app
+cp puma.rb /app/
+cp Gemfile /app/
+cd /app && bundle install
