@@ -1,5 +1,7 @@
 #!/bin/bash
 
+dir=$PWD
+
 sudo apt update && sudo apt upgrade -y
 
 sudo chsh -s /bin/bash www-data
@@ -17,6 +19,7 @@ sudo PREFIX=/usr/local ./install.sh
 ruby-build -v 2.6.3 /usr
 sudo gem update --system
 
+cd $dir
 cp puma.service puma.socket /etc/systemd/system/
 sudo systemctl daemon-reload
 sudo systemctl enable puma.socket puma.service
