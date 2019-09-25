@@ -21,6 +21,10 @@ sudo gem update --system
 
 cd $dir
 cp puma.service puma.socket /etc/systemd/system/
+cp logrotate /etc/logrotate.d/puma
+touch /var/log/puma.log
+chown www-data: /var/log/puma.log
+
 sudo systemctl daemon-reload
 sudo systemctl enable puma.socket puma.service
 sudo mkdir -p /app ; git clone https://github.com/michelesr/puma-sinatra-example.git /app

@@ -1,0 +1,13 @@
+/var/log/puma.log {
+    hourly
+    missingok
+    rotate 14
+    compress
+    delaycompress
+    create 640 www-data www-data
+    sharedscripts
+    su root syslog
+    postrotate
+        systemctl reload puma.service
+    endscript
+}
